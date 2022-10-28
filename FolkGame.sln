@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharpTest", "FSharpTest\FSharpTest.fsproj", "{DF343363-6596-47B2-9C80-C86E4D8E07C1}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FolkGame.Core", "FolkGame.Core\FolkGame.Core.fsproj", "{DF343363-6596-47B2-9C80-C86E4D8E07C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
