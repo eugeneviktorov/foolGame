@@ -1,4 +1,4 @@
-namespace FolkGame.Web.Models
+namespace FoolGame.Web.Models
 
 [<CLIMutable>]
 type Message =

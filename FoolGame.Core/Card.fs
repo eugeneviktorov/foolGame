@@ -1,4 +1,4 @@
-module FolkGame.Core.Card
+module FoolGame.Core.Card
 
 type CardSuit =
     | Hearts

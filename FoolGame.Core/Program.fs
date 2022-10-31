@@ -1,6 +1,6 @@
 ﻿open System
 open System.Text.RegularExpressions
-open FolkGame.Core
+open FoolGame.Core
 open Microsoft.FSharp.Collections
 open Microsoft.FSharp.Core
 open Card

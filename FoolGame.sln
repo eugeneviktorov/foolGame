@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FolkGame.Core", "FolkGame.Core\FolkGame.Core.fsproj", "{DF343363-6596-47B2-9C80-C86E4D8E07C1}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FoolGame.Core", "FoolGame.Core\FoolGame.Core.fsproj", "{DF343363-6596-47B2-9C80-C86E4D8E07C1}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FolkGame.Web", "FolkGame.Web\FolkGame.Web.fsproj", "{743FF5E8-D201-469F-BF47-BA7C4F8803FC}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FoolGame.Web", "FoolGame.Web\FoolGame.Web.fsproj", "{743FF5E8-D201-469F-BF47-BA7C4F8803FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

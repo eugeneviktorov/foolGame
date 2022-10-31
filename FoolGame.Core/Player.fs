@@ -1,4 +1,4 @@
-module FolkGame.Core.Player
+module FoolGame.Core.Player
 
 open Card
 

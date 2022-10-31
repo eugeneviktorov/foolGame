@@ -1,12 +1,12 @@
-namespace FolkGame.Web
+namespace FoolGame.Web
 
 module HttpHandlers =
 
     open Microsoft.AspNetCore.Http
     open FSharp.Control.Tasks
     open Giraffe
-    open FolkGame.Web.Models
-    open FolkGame.Core
+    open FoolGame.Web.Models
+    open FoolGame.Core
     
     let newGame =
         fun (next : HttpFunc) (ctx : HttpContext) ->

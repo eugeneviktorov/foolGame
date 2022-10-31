@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <AssemblyName>FolkGame.Web.App</AssemblyName>
+    <AssemblyName>FoolGame.Web.App</AssemblyName>
     <EnableDefaultContentItems>false</EnableDefaultContentItems>
   </PropertyGroup>
 
@@ -23,6 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FolkGame.Core\FolkGame.Core.fsproj" />
+    <ProjectReference Include="..\FoolGame.Core\FoolGame.Core.fsproj" />
   </ItemGroup>
 </Project>
