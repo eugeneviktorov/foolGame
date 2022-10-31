@@ -1,48 +1,10 @@
 ﻿open System
 open System.Text.RegularExpressions
+open FolkGame.Core
 open Microsoft.FSharp.Collections
 open Microsoft.FSharp.Core
-
-type CardSuit =
-    | Hearts
-    | Diamonds
-    | Clubs
-    | Spades
-
-type CardRank =
-    | Six
-    | Seven
-    | Eight
-    | Nine
-    | Ten
-    | Jack
-    | Queen
-    | King
-    | Ace
-
-[<StructuredFormatDisplay("{DisplayText}")>]
-type Card =
-    { Suit: CardSuit
-      Rank: CardRank }
-    member this.DisplayText = this.ToString()
-    override this.ToString() = $"{this.Rank} of {this.Suit}"
-
-let suits =
-    [ Diamonds; Clubs; Diamonds; Hearts ]
-
-let ranks =
-    [ Six
-      Seven
-      Eight
-      Nine
-      Ten
-      Jack
-      Queen
-      King
-      Ace ]
-
-type Player = { Hand: Card []; Name: string }
-
+open Card
+open Player
 type MovedCard = { Card: Card; Player: Player }
 
 type Move =
