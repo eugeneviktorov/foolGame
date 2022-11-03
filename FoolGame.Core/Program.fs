@@ -5,27 +5,9 @@ open Microsoft.FSharp.Collections
 open Microsoft.FSharp.Core
 open Card
 open Player
-type MovedCard = { Card: Card; Player: Player }
+open Game
 
-type Move =
-    | TakeFromDeck of MovedCard
-    | Play of MovedCard
-    | Beat of Beaten: MovedCard * Played: MovedCard
-    | Take
-    | Done
-
-type Game =
-    { Deck: Card []
-      Players: Player []
-      AttackPlayer: Player option
-      DefencePlayer: Player option
-      Moves: Move []
-      GeneralCard: Card }
-
-    static member DefaultDeck =
-        [| for suit in suits do
-               for rank in ranks do
-                   yield { Suit = suit; Rank = rank } |]
+let indexOf item list = List.findIndex (fun x -> x = item) list
 
 let canBeat playedCard beatCard suit =
     if playedCard.Suit = beatCard.Suit then
@@ -33,7 +15,8 @@ let canBeat playedCard beatCard suit =
     else
         beatCard.Suit = suit
 
-let shuffle (deck: Card []) =
+let shuffle (deck: Card list) =
+    let deck = List.toArray deck
     // swap two elements in the supplied array
     let swap i j (array: _ []) =
         let tmp = array.[i]
@@ -47,7 +30,7 @@ let shuffle (deck: Card []) =
         let j = rnd.Next(i, n - 1)
         swap i j deck
 
-    deck
+    Array.toList deck
 
 let getCard (deck: Card []) = deck[Random.Shared.Next(0, 35)]
 
@@ -68,10 +51,9 @@ let updatePlayer oldPlayer newPlayer game =
         | Some _ -> game
         | None -> game
 
-    let index =
-        Array.IndexOf(game.Players, oldPlayer)
+    let index = (indexOf oldPlayer game.Players)
 
-    { game with Players = (Array.updateAt index newPlayer game.Players) }
+    { game with Players = (List.updateAt index newPlayer game.Players) }
 
 let getTable game =
     game.Moves
@@ -90,7 +72,7 @@ let getTable game =
     |> Seq.map (fun (key, y) -> (key, Seq.map (fun (_, beaten) -> beaten) y |> Seq.max))
 
 let registerMove move game =
-    { game with Moves = Array.append game.Moves [| move |] }
+    { game with Moves = game.Moves @ [ move ] }
 
 let takeCard count player game =
     if count <= 0 then
@@ -98,13 +80,13 @@ let takeCard count player game =
     else
         match player with
         | Some (player) ->
-            let cards = Array.take count game.Deck
+            let cards = List.take count game.Deck
             printfn $"Taken cards for %s{player.Name} is : %A{cards}"
 
             ((player, game), cards)
             ||> Seq.fold (fun (player, game) card ->
                 let newPlayer =
-                    { player with Hand = (Array.append player.Hand [| card |]) }
+                    { player with Hand = (player.Hand @ [ card ]) }
 
                 updatePlayer player newPlayer { game with Deck = game.Deck[1..] }
                 |> registerMove (TakeFromDeck { Card = card; Player = player })
@@ -117,7 +99,7 @@ let beatCard beaten played game =
 
 let nextPlayer currentPlayer game =
     let mutable indexNext =
-        Array.IndexOf(game.Players, currentPlayer) + 1
+        (indexOf currentPlayer game.Players) + 1
 
     if game.Players.Length <= indexNext then
         indexNext <- 0
@@ -142,10 +124,10 @@ let fillPlayersHand game =
 
 let rec continueGame (game: Game) =
 
-    if Array.isEmpty game.Deck
+    if List.isEmpty game.Deck
        && game.Players
-          |> Array.map (fun x -> Array.isEmpty x.Hand)
-          |> Array.forall id then
+          |> List.map (fun x -> List.isEmpty x.Hand)
+          |> List.forall id then
         printfn "game done"
         ()
 
@@ -183,7 +165,7 @@ let rec continueGame (game: Game) =
             (Int32.Parse r.Groups[2].Value - 1)
 
         let hand =
-            Array.removeAt handIndex defencePlayer.Hand
+            List.removeAt handIndex defencePlayer.Hand
 
         let handCard = defencePlayer.Hand[handIndex]
 
@@ -212,7 +194,7 @@ let rec continueGame (game: Game) =
         let hand = attackPlayer.Hand
         let card = hand[index]
         printfn $"You just pushed %A{card}"
-        let hand = (Array.removeAt index hand)
+        let hand = (List.removeAt index hand)
         printfn $"After the operation you hand is %A{hand}"
 
         registerMove (Play({ Card = card; Player = attackPlayer })) game
@@ -234,17 +216,16 @@ let rec continueGame (game: Game) =
         |> fun g -> updateAttackPlayer (nextPlayer attackPlayer g) g
         |> continueGame
     | "take" ->
-        ([||], getTable game)
+        ([], getTable game)
         ||> Seq.fold (fun x (play, beat) ->
-            (Array.append
-                x
-                [| Some(play.Card)
-                   match beat with
-                   | Some (x) -> Some(x.Card)
-                   | None -> None |]))
+            (x
+             @ [ Some(play.Card)
+                 match beat with
+                 | Some (x) -> Some(x.Card)
+                 | None -> None ]))
         |> Seq.choose id
-        |> Seq.toArray
-        |> (fun x -> (updatePlayer defencePlayer { defencePlayer with Hand = (Array.append defencePlayer.Hand x) } game))
+        |> Seq.toList
+        |> (fun x -> (updatePlayer defencePlayer { defencePlayer with Hand = (defencePlayer.Hand @ x) } game))
         |> registerMove (Take)
         |> continueGame
     | "moves" ->
@@ -253,16 +234,16 @@ let rec continueGame (game: Game) =
     | "exit" -> ()
     | _ -> (continueGame game)
 
-let currentDeck = shuffle Game.DefaultDeck
+let currentDeck =                           shuffle Game.DefaultDeck
 
 let game =
     { Deck = currentDeck
-      Moves = [||]
+      Moves = []
       AttackPlayer = None
       DefencePlayer = None
-      GeneralCard = Array.last currentDeck
+      GeneralCard = List.last currentDeck
       Players =
-        [| { Hand = [||]; Name = "Player1" }
-           { Hand = [||]; Name = "Player2" } |] }
+        [ { Hand = []; Name = "Player1" }
+          { Hand = []; Name = "Player2" } ] }
 
 fillPlayersHand game |> continueGame

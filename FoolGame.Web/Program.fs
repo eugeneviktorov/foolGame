@@ -19,7 +19,13 @@ let webApp =
         subRoute "/api"
             (choose [
                 GET >=> choose [
-                    route "/newgame" >=> newGame
+                    routef "/new/%i" newGame
+                    route "/list" >=> gameList
+                    route "/join"
+                    route "/play"
+                    route "/take"
+                    route "/beat"
+                    route "/leave"
                 ]
             ])
         setStatusCode 404 >=> text "Not Found" ]

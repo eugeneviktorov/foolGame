@@ -8,6 +8,7 @@
     <ItemGroup>
         <Compile Include="Card.fs" />
         <Compile Include="Player.fs" />
+        <Compile Include="Game.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 
