@@ -20,8 +20,10 @@ let webApp =
             (choose [
                 GET >=> choose [
                     routef "/new/%i" newGame
+                    routef "/start/%O" startGame
                     route "/list" >=> gameList
-                    route "/join"
+                    routef "/join/%O" joinGame
+                    routef "/state/%O" stateGame
                     route "/play"
                     route "/take"
                     route "/beat"
