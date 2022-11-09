@@ -153,13 +153,23 @@ module HttpHandlers =
                     return! json response next ctx
             }
 
+    /// start game
     let startGame (gameId: Guid) =
-        fun (next: HttpFunc) (ctx: HttpContext) -> task { return! json 1 next ctx }
+
+        getGame gameId
+        |> (fun (game, _) -> updateAttackPlayer game.Players[0] game)
+        |> (fun game -> gameBox.Post(Update(game, gameId)))
+
+        fun (next: HttpFunc) (ctx: HttpContext) -> task { return! json "Game was started" next ctx }
 
     let stateGame (token: Guid) =
         fun (next: HttpFunc) (ctx: HttpContext) ->
             task {
                 let game, status = getGameByToken token
+                
+                // we need get game from the player view
+                // for this we need filter data
+                
                 return! json {| Game = game; Status = status |} next ctx
             }
 
