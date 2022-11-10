@@ -4,6 +4,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FoolGame.Core", "FoolGame.C
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FoolGame.Web", "FoolGame.Web\FoolGame.Web.fsproj", "{743FF5E8-D201-469F-BF47-BA7C4F8803FC}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FoolGame.Test", "FoolGame.Test\FoolGame.Test.fsproj", "{8586FC9C-74B9-42AD-A1B7-77CDC2CDC529}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{743FF5E8-D201-469F-BF47-BA7C4F8803FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{743FF5E8-D201-469F-BF47-BA7C4F8803FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{743FF5E8-D201-469F-BF47-BA7C4F8803FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8586FC9C-74B9-42AD-A1B7-77CDC2CDC529}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8586FC9C-74B9-42AD-A1B7-77CDC2CDC529}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8586FC9C-74B9-42AD-A1B7-77CDC2CDC529}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8586FC9C-74B9-42AD-A1B7-77CDC2CDC529}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -41,6 +41,13 @@ module HttpHandlers =
         |> List.find (fun x -> x.Token = token)
         |> fun x -> getGame x.GameId
 
+    let playerByToken token =
+        connectedPlayers
+        |> List.find (fun x -> x.Token = token)
+        |> fun x ->
+            (getGame x.GameId)
+            |> fun (game, _) -> game.Players[x.PlayerIndex]
+
     let playerBox =
         MailboxProcessor.Start (fun inbox ->
             let rec loop =
@@ -166,11 +173,29 @@ module HttpHandlers =
         fun (next: HttpFunc) (ctx: HttpContext) ->
             task {
                 let game, status = getGameByToken token
-                
+
                 // we need get game from the player view
                 // for this we need filter data
-                
-                return! json {| Game = game; Status = status |} next ctx
+
+                let deckCount = game.Deck.Length
+
+                let players =
+                    game.Players
+                    |> List.map (fun x ->
+                        {| CardCount = x.Hand.Length
+                           Name = x.Name |})
+
+                let hand = playerByToken token
+
+
+                return!
+                    json
+                        {| DeckCount = deckCount
+                           Players = players
+                           Hand = hand
+                           Status = status |}
+                        next
+                        ctx
             }
 
     let play (token: Guid) =
