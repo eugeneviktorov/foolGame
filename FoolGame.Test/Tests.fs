@@ -4,7 +4,6 @@ open System
 open System.IO
 open System.Text.Json
 open FoolGame.Test
-open Giraffe
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
 open Microsoft.AspNetCore.TestHost
@@ -31,7 +30,7 @@ let shouldNotNull expected = Assert.NotNull(expected)
 type ApiTests(output: ITestOutputHelper) =
 
     [<Fact>]
-    member _.``GET /api/new/2 should responce id``() =
+    member _.``GET /api/new/2 should response id``() =
         use server = new TestServer(createHost ())
         use client = server.CreateClient()
 
@@ -41,12 +40,30 @@ type ApiTests(output: ITestOutputHelper) =
         |> JsonSerializer.Deserialize<Guid>
 
     [<Fact>]
-    member _.``GET /api/list show response list of games``() =
+    member _.``GET /api/list``() =
         use server = new TestServer(createHost ())
         use client = server.CreateClient()
 
         get client "api/new/2" |> ensureSuccess |> ignore
+
         get client "api/list"
+        |> ensureSuccess
+        |> readText
+        |> output.WriteLine
+
+
+    [<Fact>]
+    member _.``GET /api/join``() =
+        use server = new TestServer(createHost ())
+        use client = server.CreateClient()
+
+        let gameId =
+            get client "api/new/2"
+            |> ensureSuccess
+            |> readText
+            |> JsonSerializer.Deserialize<Guid>
+        
+        get client $"api/join/%O{gameId}"
         |> ensureSuccess
         |> readText
         |> output.WriteLine
