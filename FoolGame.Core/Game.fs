@@ -144,3 +144,10 @@ let fillPlayersHand game =
     (game, game.Players)
     ||> Seq.fold (fun game p -> (takeCard (6 - p.Hand.Length) (Some(p)) game))
     
+let play cardIndex player game =
+    let hand = player.Hand
+    let card = hand[cardIndex]
+    let hand = (List.removeAt cardIndex hand)
+    
+    registerMove (Play({ Card = card; Player = player })) game
+    |> updatePlayer player { player with Hand = hand }

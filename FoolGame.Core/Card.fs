@@ -1,11 +1,15 @@
 module FoolGame.Core.Card
 
+open System.Text.Json.Serialization
+
+[<JsonConverter(typeof<JsonStringEnumConverter>)>]
 type CardSuit =
     | Hearts
     | Diamonds
     | Clubs
     | Spades
 
+[<JsonConverter(typeof<JsonStringEnumConverter>)>]
 type CardRank =
     | Six
     | Seven
@@ -17,11 +21,11 @@ type CardRank =
     | King
     | Ace
 
-[<StructuredFormatDisplay("{DisplayText}")>]
+// [<StructuredFormatDisplay("{DisplayText}")>]
 type Card =
     { Suit: CardSuit
       Rank: CardRank }
-    member this.DisplayText = this.ToString()
+    
     override this.ToString() = $"{this.Rank} of {this.Suit}"
 
 let suits =
