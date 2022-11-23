@@ -36,7 +36,7 @@ type GameStateResult =
     { DeckCount: int
       Hand: Card list
       Status: GameStatus
-      Table: (MovedCard * MovedCard option) seq
+      Table: TableCard seq
       Players: PlayerStatus list }
 
 type GameHandler() =
@@ -174,8 +174,8 @@ type GameHandler() =
         }
 
     member this.start(gameId: Guid) =
-        
-        task{
+
+        task {
             connectedPlayers
             |> List.filter (fun x -> x.GameId = gameId)
             |> List.length
@@ -189,7 +189,7 @@ type GameHandler() =
             |> fun (game, _) -> fillPlayersHand game
             |> (fun game -> updateAttackPlayer game.Players[0] game)
             |> (fun game -> gameBox.Post(Update(game, gameId)))
-        }   
+        }
 
 
     member this.state(token: Guid) =
@@ -223,15 +223,14 @@ type GameHandler() =
     member this.play(token: Guid, cardIndex: int) =
 
         task {
-            let (game, status, gameId) =
-                gameByToken token
+            let (game, _, gameId) = gameByToken token
 
             let player = playerByToken token
 
-            play cardIndex player game
+            (play cardIndex player game)
             |> fun x -> gameBox.Post(Update(x, gameId))
 
-            return! this.state gameId
+            return! this.state token
         }
 
     member this.take(token: Guid) =
@@ -244,10 +243,10 @@ type GameHandler() =
                 failwith "This player not defence now"
 
             ([], getTable game)
-            ||> Seq.fold (fun x (play, beat) ->
+            ||> Seq.fold (fun x y ->
                 (x
-                 @ [ Some(play.Card)
-                     match beat with
+                 @ [ Some(y.Played.Card)
+                     match y.Beaten with
                      | Some (x) -> Some(x.Card)
                      | None -> None ]))
             |> Seq.choose id
@@ -255,7 +254,7 @@ type GameHandler() =
             |> (fun x -> (updatePlayer player { player with Hand = (player.Hand @ x) } game))
             |> registerMove (Take)
             |> fillPlayersHand
-            |> fun game -> updateAttackPlayer (nextPlayer player game) game 
+            |> fun game -> updateAttackPlayer (nextPlayer player game) game
             |> fun x -> gameBox.Post(Update(x, gameId))
 
             return! this.state (token)
@@ -284,10 +283,10 @@ type GameHandler() =
 
             let game =
                 match tableCard with
-                | card, beaten when beaten = None ->
-                    if (canBeat card.Card handCard game.GeneralCard.Suit) then
+                | x when x.Beaten = None ->
+                    if (canBeat x.Played.Card handCard game.GeneralCard.Suit) then
                         updatePlayer player { player with Hand = hand } game
-                        |> beatCard card { Card = handCard; Player = player }
+                        |> beatCard x.Played { Card = handCard; Player = player }
                     else
                         failwith "You can't beat this card"
                 | _ -> failwith "This card already beaten"
@@ -299,7 +298,6 @@ type GameHandler() =
 
     member this.end_round(gameId) =
         task {
-
             gameById gameId
             |> fun (game, _) -> registerMove Done game
             |> fun game ->
@@ -307,8 +305,6 @@ type GameHandler() =
                 | Some (player) -> updateAttackPlayer player game
                 | None -> failwith "No defence player set for the game"
             |> fun game -> gameBox.Post(Update(game, gameId))
-
-            return! this.state gameId
         }
 
     member this.leave =

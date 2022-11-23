@@ -228,25 +228,25 @@ module HttpHandlers =
     let take (token: Guid) =
         fun (next: HttpFunc) (ctx: HttpContext) ->
             task {
-                let (game, _, gameId) = gameByToken token
-                let player = playerByToken token
-
-                if game.DefencePlayer <> Some(player) then
-                    failwith "This player not defence now"
-
-                ([], getTable game)
-                ||> Seq.fold (fun x (play, beat) ->
-                    (x
-                     @ [ Some(play.Card)
-                         match beat with
-                         | Some (x) -> Some(x.Card)
-                         | None -> None ]))
-                |> Seq.choose id
-                |> Seq.toList
-                |> (fun x -> (updatePlayer player { player with Hand = (player.Hand @ x) } game))
-                |> registerMove (Take)
-                |> fillPlayersHand
-                |> fun x -> gameBox.Post(Update(x, gameId))
+                // let (game, _, gameId) = gameByToken token
+                // let player = playerByToken token
+                //
+                // if game.DefencePlayer <> Some(player) then
+                //     failwith "This player not defence now"
+                //
+                // ([], getTable game)
+                // ||> Seq.fold (fun x (play, beat) ->
+                //     (x
+                //      @ [ Some(play.Card)
+                //          match beat with
+                //          | Some (x) -> Some(x.Card)
+                //          | None -> None ]))
+                // |> Seq.choose id
+                // |> Seq.toList
+                // |> (fun x -> (updatePlayer player { player with Hand = (player.Hand @ x) } game))
+                // |> registerMove (Take)
+                // |> fillPlayersHand
+                // |> fun x -> gameBox.Post(Update(x, gameId))
 
                 return! json "taken" next ctx
             }
@@ -254,39 +254,39 @@ module HttpHandlers =
     let beat (token: Guid, handCardIndex: int, tableCardIndex: int) =
         fun (next: HttpFunc) (ctx: HttpContext) ->
             task {
-
-                let (game, _, gameId) = gameByToken token
-                let player = playerByToken token
-
-                if Some(player) <> game.DefencePlayer then
-                    failwith "This player not defence now"
-
-                let handCard =
-                    player.Hand |> List.item handCardIndex
-
-                let tableCard =
-                    getTable game
-                    |> Seq.toList
-                    |> List.item tableCardIndex
-
-                let hand =
-                    List.removeAt handCardIndex player.Hand
-
-                let game =
-                    match tableCard with
-                    | card, beaten when beaten = None ->
-                        if (canBeat card.Card handCard game.GeneralCard.Suit) then
-                            updatePlayer player { player with Hand = hand } game
-                            |> beatCard card { Card = handCard; Player = player }
-                        else
-                            failwith "You can't beat this card"
-                    | _ -> failwith "This card already beaten"
-                    |> updateAttackPlayer player
-                    
-                gameBox.Post(Update(game, gameId))
-
-                let response = sprintf $"%A{games}"
-                return! json response next ctx
+                //
+                // let (game, _, gameId) = gameByToken token
+                // let player = playerByToken token
+                //
+                // if Some(player) <> game.DefencePlayer then
+                //     failwith "This player not defence now"
+                //
+                // let handCard =
+                //     player.Hand |> List.item handCardIndex
+                //
+                // let tableCard =
+                //     getTable game
+                //     |> Seq.toList
+                //     |> List.item tableCardIndex
+                //
+                // let hand =
+                //     List.removeAt handCardIndex player.Hand
+                //
+                // let game =
+                //     match tableCard with
+                //     | card, beaten when beaten = None ->
+                //         if (canBeat card.Card handCard game.GeneralCard.Suit) then
+                //             updatePlayer player { player with Hand = hand } game
+                //             |> beatCard card { Card = handCard; Player = player }
+                //         else
+                //             failwith "You can't beat this card"
+                //     | _ -> failwith "This card already beaten"
+                //     |> updateAttackPlayer player
+                //     
+                // gameBox.Post(Update(game, gameId))
+                //
+                // let response = sprintf $"%A{games}"
+                return! json "" next ctx
             }
 
     let leave =

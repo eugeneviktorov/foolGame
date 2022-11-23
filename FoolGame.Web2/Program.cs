@@ -1,4 +1,5 @@
 using FoolGame.Core;
+using FoolGame.Web2;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,7 +8,7 @@ builder.Services.AddSingleton(_ => new Handlers.GameHandler());
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options => options.SchemaFilter<OptionSchemaFilter>());
 
 var app = builder.Build();
 

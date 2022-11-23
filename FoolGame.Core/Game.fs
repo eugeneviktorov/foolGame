@@ -14,6 +14,10 @@ type Move =
     | Take
     | Done
 
+type TableCard =
+    { Played: MovedCard
+      Beaten: MovedCard option }
+
 type Game =
     { Deck: Card list
       Players: Player list
@@ -92,6 +96,7 @@ let getTable game =
         | Beat (played, beaten) -> (played, Some(beaten)))
     |> Seq.groupBy (fun (card, _) -> card)
     |> Seq.map (fun (key, y) -> (key, Seq.map (fun (_, beaten) -> beaten) y |> Seq.max))
+    |> Seq.map (fun (played, beaten) -> { Played = played; Beaten = beaten })
 
 let registerMove move game =
     { game with Moves = game.Moves @ [ move ] }
@@ -143,11 +148,11 @@ let unwrap optionValue =
 let fillPlayersHand game =
     (game, game.Players)
     ||> Seq.fold (fun game p -> (takeCard (6 - p.Hand.Length) (Some(p)) game))
-    
+
 let play cardIndex player game =
     let hand = player.Hand
     let card = hand[cardIndex]
     let hand = (List.removeAt cardIndex hand)
-    
+
     registerMove (Play({ Card = card; Player = player })) game
     |> updatePlayer player { player with Hand = hand }
