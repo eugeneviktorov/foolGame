@@ -1,7 +1,7 @@
 using FoolGame.Core;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoolGame.Web2.Controllers;
+namespace FoolGame.Api.Controllers;
 
 [ApiController]
 [Route("game")]
@@ -37,5 +37,5 @@ public class GameController
     public Task<Handlers.GameStateResult> Take(Guid token) => _gameHandler.take(token);
 
     [HttpPost("end_round")]
-    public Task<Handlers.GameStateResult> EndRound(Guid gameId) => _gameHandler.end_round(gameId);
+    public Task EndRound(Guid gameId) => _gameHandler.end_round(gameId);
 }

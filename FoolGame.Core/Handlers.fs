@@ -245,9 +245,9 @@ type GameHandler() =
             ([], getTable game)
             ||> Seq.fold (fun x y ->
                 (x
-                 @ [ Some(y.Played.Card)
+                 @ [ Some(y.Played)
                      match y.Beaten with
-                     | Some (x) -> Some(x.Card)
+                     | Some (x) -> Some(x)
                      | None -> None ]))
             |> Seq.choose id
             |> Seq.toList
@@ -284,9 +284,9 @@ type GameHandler() =
             let game =
                 match tableCard with
                 | x when x.Beaten = None ->
-                    if (canBeat x.Played.Card handCard game.GeneralCard.Suit) then
+                    if (canBeat x.Played handCard game.GeneralCard.Suit) then
                         updatePlayer player { player with Hand = hand } game
-                        |> beatCard x.Played { Card = handCard; Player = player }
+                        |> beatCard { Player = player; Card = x.Played } { Card = handCard; Player = player }
                     else
                         failwith "You can't beat this card"
                 | _ -> failwith "This card already beaten"

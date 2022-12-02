@@ -12,6 +12,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\FoolGame.Web\FoolGame.Web.fsproj" />
+      <ProjectReference Include="..\FoolGame.Core\FoolGame.Core.fsproj" />
     </ItemGroup>
 </Project>

@@ -5,7 +5,7 @@ using Microsoft.FSharp.Reflection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace FoolGame.Web2;
+namespace FoolGame.Api;
 
 public static class GenericExtensions
 {

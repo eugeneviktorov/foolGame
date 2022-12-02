@@ -28,7 +28,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\FoolGame.Web2\FoolGame.Web2.csproj" />
+      <ProjectReference Include="..\FoolGame.Api\FoolGame.Api.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,5 +1,5 @@
+using FoolGame.Api;
 using FoolGame.Core;
-using FoolGame.Web2;
 
 var builder = WebApplication.CreateBuilder(args);
 

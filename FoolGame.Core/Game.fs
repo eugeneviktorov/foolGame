@@ -14,9 +14,7 @@ type Move =
     | Take
     | Done
 
-type TableCard =
-    { Played: MovedCard
-      Beaten: MovedCard option }
+type TableCard = { Played: Card; Beaten: Card option }
 
 type Game =
     { Deck: Card list
@@ -30,8 +28,6 @@ type Game =
         [ for suit in suits do
               for rank in ranks do
                   yield { Suit = suit; Rank = rank } ]
-
-
 
 let indexOf item list = List.findIndex (fun x -> x = item) list
 
@@ -96,7 +92,12 @@ let getTable game =
         | Beat (played, beaten) -> (played, Some(beaten)))
     |> Seq.groupBy (fun (card, _) -> card)
     |> Seq.map (fun (key, y) -> (key, Seq.map (fun (_, beaten) -> beaten) y |> Seq.max))
-    |> Seq.map (fun (played, beaten) -> { Played = played; Beaten = beaten })
+    |> Seq.map (fun (played, beaten) ->
+        { Played = played.Card
+          Beaten =
+            match beaten with
+            | Some (x) -> Some(x.Card)
+            | None -> None })
 
 let registerMove move game =
     { game with Moves = game.Moves @ [ move ] }
