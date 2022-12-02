@@ -24,7 +24,8 @@ type GameMessage =
 type GameStatusResult =
     { GameId: Guid
       Status: GameStatus
-      PlayersCount: int }
+      PlayersCount: int
+      Seats: int }
 
 type PlayerStatus =
     { CardCount: int
@@ -139,7 +140,8 @@ type GameHandler() =
 
                     { GameId = id
                       Status = status
-                      PlayersCount = game.Players.Length })
+                      PlayersCount = game.Players.Length
+                      Seats = 0}) // TODO: Players count
 
             return listGames
         }

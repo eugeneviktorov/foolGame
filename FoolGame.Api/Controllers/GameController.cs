@@ -17,6 +17,9 @@ public class GameController
     [HttpPost("new")]
     public Task<Guid> NewGame(int playersCount) => _gameHandler.create(playersCount);
 
+    [HttpGet("list")]
+    public async Task<List<Handlers.GameStatusResult>> ListGames() => (await _gameHandler.list()).ToList();
+    
     [HttpPost("join")]
     public Task<Guid> JoinGame(Guid gameId) => _gameHandler.join(gameId);
 
@@ -26,7 +29,7 @@ public class GameController
     [HttpPost("play")]
     public Task<Handlers.GameStateResult> Play(Guid token, int cardIndex) => _gameHandler.play(token, cardIndex);
 
-    [HttpPost("state")]
+    [HttpGet("state")]
     public Task<Handlers.GameStateResult> StateGame(Guid token) => _gameHandler.state(token);
 
     [HttpPost("beat")]
