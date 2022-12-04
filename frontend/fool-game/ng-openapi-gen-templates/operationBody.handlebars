@@ -1,0 +1,14 @@
+{{{bodyMethodTsComments}}}{{methodName}}({{>operationParameters}}): Observable<{{{resultType}}}> {
+
+    return this.{{responseMethodName}}(params).pipe(
+      map((r: {{@root.responseClass}}<{{{resultType}}}>) => r.body as {{{resultType}}})
+    );
+  }
+{{! Если у цикла будет несколько итераций - будет сгенерирован невалидный код - множенственность в правах в настоящий момент не поддерживается}}
+{{#each operation.security}}
+  {{#each this}}
+  {{../../methodName}}_Permission() {
+    return '{{this.scope}}';
+  }
+  {{/each}}
+{{/each}}

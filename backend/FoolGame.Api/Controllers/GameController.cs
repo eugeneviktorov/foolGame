@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FoolGame.Api.Controllers;
 
 [ApiController]
-[Route("game")]
+[Route("api/game")]
 public class GameController
 {
     private readonly Handlers.GameHandler _gameHandler;

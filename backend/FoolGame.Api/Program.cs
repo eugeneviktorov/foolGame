@@ -8,7 +8,11 @@ builder.Services.AddSingleton(_ => new Handlers.GameHandler());
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options => options.SchemaFilter<OptionSchemaFilter>());
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SchemaFilter<OptionSchemaFilter>();
+    options.OperationFilter<OperationIdFilter>();
+});
 
 var app = builder.Build();
 
