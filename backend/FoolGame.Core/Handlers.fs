@@ -41,11 +41,9 @@ type GameStateResult =
       Players: PlayerStatus list }
 
 type GameHandler() =
-    let mutable connectedPlayers: ConnectedPlayer list =
-        list.Empty
+    let mutable connectedPlayers: ConnectedPlayer list = list.Empty
 
-    let mutable games: (Game * Guid * GameStatus) list =
-        list.Empty
+    let mutable games: (Game * Guid * GameStatus) list = list.Empty
 
 
     let gameById id : Game * GameStatus =
@@ -62,12 +60,10 @@ type GameHandler() =
     let playerByToken token =
         connectedPlayers
         |> List.find (fun x -> x.Token = token)
-        |> fun x ->
-            (gameById x.GameId)
-            |> fun (game, _) -> game.Players[x.PlayerIndex]
+        |> fun x -> (gameById x.GameId) |> fun (game, _) -> game.Players[x.PlayerIndex]
 
     let playerBox =
-        MailboxProcessor.Start (fun inbox ->
+        MailboxProcessor.Start(fun inbox ->
             let rec loop =
                 async {
                     let! pl = inbox.Receive()
@@ -78,7 +74,7 @@ type GameHandler() =
             loop)
 
     let gameBox =
-        MailboxProcessor.Start (fun inbox ->
+        MailboxProcessor.Start(fun inbox ->
             let rec loop =
                 async {
                     let! msg = inbox.Receive()
@@ -118,7 +114,7 @@ type GameHandler() =
             let deck = (shuffle Game.DefaultDeck)
 
             return
-                gameBox.PostAndReply (fun x ->
+                gameBox.PostAndReply(fun x ->
                     Create(
                         { Deck = deck
                           Players = players
@@ -141,7 +137,7 @@ type GameHandler() =
                     { GameId = id
                       Status = status
                       PlayersCount = game.Players.Length
-                      Seats = 0}) // TODO: Players count
+                      Seats = connectedPlayers |> List.where (fun x -> x.GameId = id) |> List.length }) 
 
             return listGames
         }
@@ -158,9 +154,7 @@ type GameHandler() =
                 |> List.head
 
             let currentCount =
-                connectedPlayers
-                |> List.filter (fun (x) -> x.GameId = gameId)
-                |> List.length
+                connectedPlayers |> List.filter (fun (x) -> x.GameId = gameId) |> List.length
 
             if (maxPlayers > currentCount) then
                 let session =
@@ -229,8 +223,7 @@ type GameHandler() =
 
             let player = playerByToken token
 
-            (play cardIndex player game)
-            |> fun x -> gameBox.Post(Update(x, gameId))
+            (play cardIndex player game) |> fun x -> gameBox.Post(Update(x, gameId))
 
             return! this.state token
         }
@@ -272,16 +265,11 @@ type GameHandler() =
             if Some(player) <> game.DefencePlayer then
                 failwith "This player not defence now"
 
-            let handCard =
-                player.Hand |> List.item handCardIndex
+            let handCard = player.Hand |> List.item handCardIndex
 
-            let tableCard =
-                getTable game
-                |> Seq.toList
-                |> List.item tableCardIndex
+            let tableCard = getTable game |> Seq.toList |> List.item tableCardIndex
 
-            let hand =
-                List.removeAt handCardIndex player.Hand
+            let hand = List.removeAt handCardIndex player.Hand
 
             let game =
                 match tableCard with
