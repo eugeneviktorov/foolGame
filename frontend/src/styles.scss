@@ -1,1 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
+@font-face { 
+    font-family: "OpenSans-Regular"; 
+    src: url("components/OpenSans-Regular.ttf"); 
+}
+body{
+    background-image: url(components/background.png);
+    background-size: cover;
+    overflow: overlay;
+}
+.naming{
+    font-size: 48px;
+    text-align: center;
+    color: #ffffff;
+}
